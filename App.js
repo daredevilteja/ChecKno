@@ -1,8 +1,8 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import { Pressable, Button, Modal, StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 const data = {
@@ -64,10 +64,12 @@ function HomeScreen({ navigation }) {
 function CYKScreen({ navigation, route }) {
   const { itemId, otherParam } = route.params;
   const currState = states[Math.floor(Math.random() * 30)];
-  const currCapital = data[currState];
+  const [currCapital, setCurrCapital] = useState("");
   const currCapitalCopy = [...capitals];
   const currOptions = [data[currState]];
   const currOptionsTemp = [];
+  const [showModal, setShowModal] = useState(false);
+  const [showAnsStatus, setShowAnsStatus] = useState("");
   let count = 0;
   while (count < 3) {
     const currNum = Math.floor(Math.random() * currCapitalCopy.length);
@@ -88,38 +90,91 @@ function CYKScreen({ navigation, route }) {
     count += 1;
   }
 
+  const checkAnswer = (val) => {
+    if (val == data[currState].toUpperCase()) {
+      setShowAnsStatus("Right");
+    } else {
+      setShowAnsStatus("Wrong");
+      setCurrCapital(data[currState]);
+    }
+    setShowModal(true);
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <Text>
-          What is the capital of {currState.toString().toUpperCase()}?
-        </Text>
-        <View>
-          <Text>{currOptionsTemp[0].toUpperCase()}</Text>
-          <Text>{currOptionsTemp[1].toUpperCase()}</Text>
-          <Text>{currOptionsTemp[2].toUpperCase()}</Text>
-          <Text>{currOptionsTemp[3].toUpperCase()}</Text>
-        </View>
-        <Text>itemId: {JSON.stringify(itemId)}</Text>
-        <Text>otherParam: {JSON.stringify(otherParam)}</Text>
-        <StatusBar style="auto" />
-        <Button
-          title="Go to CYK Screen"
-          onPress={() =>
-            navigation.push("Check Your Knowledge", {
-              itemId: Math.floor(Math.random() * 100),
-            })
-          }
-        />
-        <Button
-          title="Go to Home"
-          onPress={() => navigation.navigate("Home")}
-        />
-        <Button title="Go back" onPress={() => navigation.goBack()} />
-        <Button
-          title="Go back to first screen in stack"
-          onPress={() => navigation.popToTop()}
-        />
+        {!showModal ? (
+          <>
+            <Text>
+              What is the capital of {currState.toString().toUpperCase()}?
+            </Text>
+            <View>
+              <Button
+                title={currOptionsTemp[0].toUpperCase()}
+                onPress={() => checkAnswer(currOptionsTemp[0].toUpperCase())}
+              />
+              <Button
+                title={currOptionsTemp[1].toUpperCase()}
+                onPress={() => checkAnswer(currOptionsTemp[1].toUpperCase())}
+              />
+              <Button
+                title={currOptionsTemp[2].toUpperCase()}
+                onPress={() => checkAnswer(currOptionsTemp[2].toUpperCase())}
+              />
+              <Button
+                title={currOptionsTemp[3].toUpperCase()}
+                onPress={() => checkAnswer(currOptionsTemp[3].toUpperCase())}
+              />
+            </View>
+            <Text>itemId: {JSON.stringify(itemId)}</Text>
+            <Text>otherParam: {JSON.stringify(otherParam)}</Text>
+            <StatusBar style="auto" />
+            <Button
+              title="Go to CYK Screen"
+              onPress={() =>
+                navigation.push("Check Your Knowledge", {
+                  itemId: Math.floor(Math.random() * 100),
+                })
+              }
+            />
+            <Button
+              title="Go to Home"
+              onPress={() => navigation.navigate("Home")}
+            />
+
+            <Button title="End" onPress={() => navigation.popToTop()} />
+          </>
+        ) : (
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={showModal}
+            onRequestClose={() => {
+              Alert.alert("Modal has been closed.");
+              setShowModal(!showModal);
+            }}
+          >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.modalText}>{showAnsStatus} Answer</Text>
+                {showAnsStatus === "Wrong" ? (
+                  <Text style={styles.modalText}>
+                    Right Answer is {currCapital}
+                  </Text>
+                ) : (
+                  <></>
+                )}
+
+                <Pressable
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={() => setShowModal(!showModal)}
+                >
+                  <Text style={styles.textStyle}>Close</Text>
+                </Pressable>
+              </View>
+            </View>
+          </Modal>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -164,5 +219,46 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
   },
 });
