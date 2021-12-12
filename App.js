@@ -63,7 +63,7 @@ function HomeScreen({ navigation }) {
 
 function CYKScreen({ navigation, route }) {
   const { itemId, otherParam } = route.params;
-  const currState = states[Math.floor(Math.random() * 30)];
+  const currState = states[Math.floor(Math.random() * states.length)];
   const [currCapital, setCurrCapital] = useState("");
   const currCapitalCopy = [...capitals];
   const currOptions = [data[currState]];
