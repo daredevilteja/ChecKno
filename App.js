@@ -44,11 +44,20 @@ function HomeScreen({ navigation }) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <Text>This is the Home Screen!</Text>
-        <View style={{ flexDirection: "row" }}>
+        <Text style={{ fontSize: 30, fontWeight: "bold" }}>
+          Welcome to ChecKno
+        </Text>
+        <View
+          style={{
+            width: 300,
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
           <Button
             title="Profile"
             onPress={() => navigation.navigate("Profile")}
+            disabled
           />
           <Button
             title="Check Your Knowledge"
@@ -105,7 +114,7 @@ function CYKScreen({ navigation, route }) {
       <View style={styles.container}>
         {!showModal ? (
           <>
-            <Text>
+            <Text style={{ fontSize: 20, fontWeight: "bold" }}>
               What is the capital of {currState.toString().toUpperCase()}?
             </Text>
             <View style={{ height: 200, justifyContent: "space-around" }}>
