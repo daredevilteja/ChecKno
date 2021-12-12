@@ -108,41 +108,47 @@ function CYKScreen({ navigation, route }) {
             <Text>
               What is the capital of {currState.toString().toUpperCase()}?
             </Text>
-            <View>
-              <Button
-                title={currOptionsTemp[0].toUpperCase()}
-                onPress={() => checkAnswer(currOptionsTemp[0].toUpperCase())}
-              />
-              <Button
-                title={currOptionsTemp[1].toUpperCase()}
-                onPress={() => checkAnswer(currOptionsTemp[1].toUpperCase())}
-              />
-              <Button
-                title={currOptionsTemp[2].toUpperCase()}
-                onPress={() => checkAnswer(currOptionsTemp[2].toUpperCase())}
-              />
-              <Button
-                title={currOptionsTemp[3].toUpperCase()}
-                onPress={() => checkAnswer(currOptionsTemp[3].toUpperCase())}
-              />
+            <View style={{ height: 200, justifyContent: "space-around" }}>
+              <View
+                style={{
+                  width: 300,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Button
+                  title={currOptionsTemp[0].toUpperCase()}
+                  onPress={() => checkAnswer(currOptionsTemp[0].toUpperCase())}
+                />
+                <Button
+                  title={currOptionsTemp[1].toUpperCase()}
+                  onPress={() => checkAnswer(currOptionsTemp[1].toUpperCase())}
+                />
+              </View>
+              <View
+                style={{
+                  width: 300,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Button
+                  title={currOptionsTemp[2].toUpperCase()}
+                  onPress={() => checkAnswer(currOptionsTemp[2].toUpperCase())}
+                />
+                <Button
+                  title={currOptionsTemp[3].toUpperCase()}
+                  onPress={() => checkAnswer(currOptionsTemp[3].toUpperCase())}
+                />
+              </View>
             </View>
-            <Text>itemId: {JSON.stringify(itemId)}</Text>
-            <Text>otherParam: {JSON.stringify(otherParam)}</Text>
-            <StatusBar style="auto" />
-            <Button
-              title="Go to CYK Screen"
-              onPress={() =>
-                navigation.push("Check Your Knowledge", {
-                  itemId: Math.floor(Math.random() * 100),
-                })
-              }
-            />
-            <Button
-              title="Go to Home"
-              onPress={() => navigation.navigate("Home")}
-            />
 
+            <Button
+              title="Generate Random"
+              onPress={() => navigation.push("Check Your Knowledge")}
+            />
             <Button title="End" onPress={() => navigation.popToTop()} />
+            <StatusBar style="auto" />
           </>
         ) : (
           <Modal
@@ -159,7 +165,7 @@ function CYKScreen({ navigation, route }) {
                 <Text style={styles.modalText}>{showAnsStatus} Answer</Text>
                 {showAnsStatus === "Wrong" ? (
                   <Text style={styles.modalText}>
-                    Right Answer is {currCapital}
+                    Right Answer is {currCapital.toUpperCase()}
                   </Text>
                 ) : (
                   <></>
